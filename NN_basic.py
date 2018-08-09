@@ -34,19 +34,28 @@ y_test = torch.tensor(y_test, dtype=torch.float, requires_grad=True)
 
 n_in, n_h, n_out, batch_size = 784, 100, 10, len(x_train)
 
-model = nn.Sequential(nn.Conv2d(n_in, n_h),
+model = nn.Sequential(nn.Linear(n_in, n_h),
                      nn.ReLU(),
-                     nn.Linear(n_h, n_out))
-
+                     nn.Linear(n_h, n_out),
+                     nn.Sigmoid())
+'''
+model = nn.Sequential(OrderedDict([
+    ('conv1', nn.Conv2d(1,20,5)),
+    ('relu1', nn.ReLU()),
+    ('conv2', nn.Conv2d(20,64,5)),
+    ('relu2', nn.ReLU()),
+    ('linear1', nn.Linear(64, 10)),
+    ('sigmoid1', nn.Sigmoid())]))
+'''
 criterion = nn.MSELoss()
 
 
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.05)
 
 y_train_one = make_one_hot(y_train)
 
 total_loss = []
-for epoch in range(10):
+for epoch in range(100):
     # Forward Propagation
     y_pred = model(x_train)
 
